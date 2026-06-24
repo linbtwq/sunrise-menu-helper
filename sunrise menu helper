@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sunrise menu helper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: clamp(12px, 2.5vw, 24px);
+            min-height: 100svh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #080611 0%, #1a1034 45%, #2b1e4f 100%);
+            background-size: 220% 220%;
+            animation: gradientBG 16s ease infinite;
+            color: #ffffff;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            position: relative;
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::before {
+            width: 260px;
+            height: 260px;
+            background: #ff4d7a;
+            top: -70px;
+            right: -60px;
+        }
+
+        body::after {
+            width: 220px;
+            height: 220px;
+            background: #4facfe;
+            bottom: -60px;
+            left: -40px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .app-container {
+            background: rgba(10, 12, 24, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 28px;
+            padding: clamp(20px, 4vw, 40px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            contain: layout paint;
+        }
+
+        .app-container::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            left: -70px;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(233,69,96,0.35) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(25px);
+            z-index: 0;
+        }
+
+        .app-container::after {
+            content: '';
+            position: absolute;
+            bottom: -70px;
+            right: -70px;
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(79,172,254,0.28) 0%, transparent 72%);
+            border-radius: 50%;
+            filter: blur(28px);
+            z-index: 0;
+        }
+
+        /* ТЕКСТИ І ЗАГОЛОВКИ */
+        h1, h2, p, div { position: relative; z-index: 1; }
+        
+        h1 {
+            font-size: clamp(28px, 4.4vw, 42px);
+            font-weight: 800;
+            background: linear-gradient(90deg, #ff8a00, #e52e71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            display: inline-block;
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+
+        p.subtitle {
+            color: #c7c7d4;
+            font-size: 16px;
+            margin: 0 auto 30px;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .category-btn {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+            padding: 22px 16px;
+            border-radius: 18px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            min-height: 92px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+        }
+
+        .category-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.5s;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-4px) scale(1.01);
+            background: linear-gradient(145deg, rgba(233,69,96,0.16), rgba(255,138,0,0.12));
+            border-color: #ff7b7b;
+            box-shadow: 0 12px 24px rgba(255, 74, 109, 0.18), inset 0 0 14px rgba(255,255,255,0.04);
+            color: #ffe7ef;
+        }
+
+        .category-btn:hover::after { left: 100%; }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 20px 0 30px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ff8a00, #e52e71);
+            border-radius: 10px;
+            transition: width 0.5s ease-out;
+            box-shadow: 0 0 10px #e52e71;
+        }
+
+        #progress-text {
+            color: #aaa;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #question-text {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .options { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
+
+        .option-btn {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 16px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 15px;
+            font-family: inherit;
+            line-height: 1.55;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.16);
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #ff8a00;
+            box-shadow: 0 8px 18px rgba(255, 138, 0, 0.14);
+            transform: translateY(-2px);
+        }
+
+        #score-display {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 20px 0;
+            filter: drop-shadow(0px 4px 10px rgba(79, 172, 254, 0.4));
+        }
+
+        .score-message { font-size: 20px; color: #fff; font-weight: 600; margin-bottom: 30px; }
+
+        .action-btn {
+            background: linear-gradient(135deg, #ff5f7e, #ff2a5f);
+            color: #fff;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin: 8px;
+            box-shadow: 0 10px 24px rgba(233, 69, 96, 0.34);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 10px 22px rgba(233, 69, 96, 0.34);
+        }
+
+        .hidden { display: none !important; }
+
+        .fade-in {
+            animation: fadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-btn {
+            animation: fadeIn 0.35s ease backwards;
+        }
+
+        .category-btn:nth-child(2) { animation-delay: 0.04s; }
+        .category-btn:nth-child(3) { animation-delay: 0.08s; }
+        .category-btn:nth-child(4) { animation-delay: 0.12s; }
+        .category-btn:nth-child(5) { animation-delay: 0.16s; }
+        .category-btn:nth-child(6) { animation-delay: 0.20s; }
+        .category-btn:nth-child(7) { animation-delay: 0.24s; }
+
+        .option-btn {
+            animation: fadeIn 0.28s ease backwards;
+        }
+
+        .option-btn:nth-child(2) { animation-delay: 0.04s; }
+        .option-btn:nth-child(3) { animation-delay: 0.08s; }
+        .option-btn:nth-child(4) { animation-delay: 0.12s; }
+        .option-btn:nth-child(5) { animation-delay: 0.16s; }
+
+        .category-btn:active,
+        .option-btn:active,
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        .category-btn,
+        .option-btn,
+        .action-btn {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            will-change: transform, opacity;
+        }
+
+        .category-btn,
+        .option-btn,
+        .action-btn,
+        .app-container {
+            transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+                align-items: flex-start;
+                animation: none;
+            }
+
+            body::before,
+            body::after {
+                opacity: 0.2;
+                filter: blur(40px);
+            }
+
+            .app-container {
+                padding: 22px 16px;
+                border-radius: 20px;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+            }
+
+            h2 {
+                font-size: 20px;
+                padding: 8px 14px;
+            }
+
+            #question-text {
+                font-size: 20px;
+            }
+
+            .grid-menu {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .category-btn {
+                padding: 16px 12px;
+                font-size: 13px;
+                min-height: 84px;
+            }
+
+            .option-btn {
+                padding: 14px;
+                font-size: 15px;
+            }
+
+            .action-btn {
+                width: 100%;
+                margin: 8px 0;
+                padding: 14px 20px;
+            }
+
+            .category-btn:hover,
+            .option-btn:hover,
+            .action-btn:hover {
+                transform: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+
+            .app-container {
+                padding: 16px 12px;
+            }
+
+            .grid-menu {
+                grid-template-columns: 1fr;
+            }
+
+            .category-btn,
+            .option-btn,
+            .action-btn {
+                border-radius: 12px;
+            }
+
+            p.subtitle {
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+
+            #question-text {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+
+            .options {
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            #score-display {
+                font-size: 36px;
+            }
+
+            .score-message {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div id="main-menu" class="fade-in">
+            <h1>sunrise menu helper</h1>
+            <p class="subtitle">/</p>
+            <div class="grid-menu">
+                <button class="category-btn" onclick="startCategory('pizza')">Піца та Кальцоне</button>
+                <button class="category-btn" onclick="startCategory('sushiSets')">Суші-Сети</button>
+                <button class="category-btn" onclick="startCategory('phila')">Роли Філадельфія</button>
+                <button class="category-btn" onclick="startCategory('calif')">Роли Каліфорнія</button>
+                <button class="category-btn" onclick="startCategory('hotMaki')">Гарячі та Футомакі</button>
+                <button class="category-btn" onclick="startCategory('salads')">Салати</button>
+                <button class="category-btn" onclick="startCategory('soupsGarnish')">Супи та Закуски</button>
+            </div>
+        </div>
+
+        <div id="quiz-screen" class="hidden fade-in">
+            <h2 id="category-title">Категорія</h2>
+            <div id="progress-text">Питання 1 / 5</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div id="question-text">Завантаження питання...</div>
+            <div class="options" id="options-container"></div>
+            <button class="action-btn" onclick="showMainMenu()">Кінець</button>
+        </div>
+
+        <div id="result-screen" class="hidden fade-in">
+            <h2>Завершено</h2>
+            <div id="score-display"></div>
+            <div class="score-message" id="score-message"></div>
+            <button class="action-btn" onclick="restartCategory()">Повторити</button>
+            <button class="action-btn" onclick="showMainMenu()">Головна</button>
+        </div>
+
+    </div>
+
+    <script>
+        const rawMenuData = {
+            pizza: {
+                title: "Піца та Кальцоне",
+                items: [
+                    { name: "Маргарита", desc: "сир моцарела, соус томатний, помідор, мікс салату, італійські трави" },
+                    { name: "Грибна", desc: "сир моцарела, соус томатний, помідор, гриби печериці, зелень, італійські трави" },
+                    { name: "Капрічоза", desc: "сир моцарела, соус вершковий, шинка, гриби печериці, зелень, італійські трави" },
+                    { name: "Грецька", desc: "сир моцарела, соус томатний, бекон, куряче філе копчене, гриби печериці, оливки чорні, італійські трави" },
+                    { name: "Гавайська", desc: "сир моцарела, соус томатний, куряче філе копчене, ананас, кукурудза, італійські трави" },
+                    { name: "Тенеро", desc: "сир моцарела, соус вершковий, куряче філе копчене, гриби печериці, сир вершковий, італійські трави" },
+                    { name: "Баварська", desc: "сир моцарела, соус томатний, бекон, ковбаски баварські, гриби печериці, перець болгарський, зелень, італійські трави" },
+                    { name: "Карбонара", desc: "сир моцарела, соус вершковий, бекон, яйця курячі, сир пармезан, мікс салату, італійські трави" },
+                    { name: "Салямі", desc: "сир моцарела, соус томатний, салямі, оливки чорні, італійські трави" },
+                    { name: "Барбекю", desc: "сир моцарела, соус томатний, соус барбекю, бекон, куряче філе копчене, ковбаски баварські, цибуля маринована, італійські трави" },
+                    { name: "Чотири м'яса", desc: "сир моцарела, соус томатний, салямі, куряче філе копчене, бекон, шинка, помідор, цибуля маринована, італійські трави" },
+                    { name: "Мексиканська", desc: "сир моцарела, соус томатний, куряче філе копчене, свинина, перець болгарський, кукурудза, цибуля маринована, італійські трави" },
+                    { name: "Неаполітано", desc: "сир моцарела, соус томатний, салямі, шинка, помідор, оливки чорні, зелень, італійські трави" },
+                    { name: "Цезар", desc: "сир моцарела, соус вершковий, соус цезар, куряче філе копчене, бекон, помідор, сир пармезан, мікс салату, італійські трави" },
+                    { name: "Чотири сири", desc: "сир моцарела, соус вершковий, сир дорблю, сир фета, сир пармезан, італійські трави" },
+                    { name: "Чотири сезони", desc: "сир моцарела, соус вершковий, салямі, шинка, куряче філе копчене, гриби печериці, помідор, зелень, кукурудза, італійські трави" },
+                    { name: "Морська", desc: "сир моцарела, соус томатний, лосось, мідії, креветки, кальмари, кунжут, італійські трави" },
+                    { name: "Філадельфія (піца)", desc: "сир моцарела, соус вершковий, лосось, крем-сир, помідор, мікс салату, італійські трави" },
+                    { name: "Кальцоне з куркою", desc: "сир моцарела, соус томатний, куряче філе копчене, цибуля маринована, італійські трави" },
+                    { name: "Кальцоне з шинкою", desc: "сир моцарела, соус томатний, шинка, гриби печериці, цибуля маринована, італійські трави" }
+                ]
+            },
+            sushiSets: {
+                title: "🍱 Суші-Сети",
+                items: [
+                    { name: "Дует Сет", desc: "Філадельфія з лососем, Каліфорнія з лососем" },
+                    { name: "Лосось Сет", desc: "Maki з лососем, Філадельфія з лососем, Maki з лососем" },
+                    { name: "Вугор Сет", desc: "Maki з вугрем, Філадельфія з вугрем, Maki з вугрем" },
+                    { name: "Вега Сет", desc: "Футомакі ясай рол, Maki з огірком, Maki з авокадо, Maki з водоростями" },
+                    { name: "Хот Сет", desc: "Темпура з лососем, Темпура з вугрем, Темпура з куркою" },
+                    { name: "Чіз Сет", desc: "Темпура з сиром, Maki з крем-сиром, Філадельфія з сиром" },
+                    { name: "Тунець Сет", desc: "Maki з тунцем, Філадельфія з тунцем, Maki з тунцем" },
+                    { name: "Креветка Сет", desc: "Креветки темпура, Філадельфія з креветками, Maki з креветками темпура" },
+                    { name: "Макі Сет", desc: "Maki з куркою, Maki з крем-сиром, Maki з лососем, Maki з вугрем, Maki з огірком" },
+                    { name: "Фукусіма Сет", desc: "Філадельфія з лососем, Футомакі з креветками темпура, Каліфорнія класична, Філадельфія з вугрем" },
+                    { name: "Каліфорнія Сет", desc: "Каліфорнія з куркою, Каліфорнія класична, Каліфорнія з окунем, Аляска рол" },
+                    { name: "Асорті Сет", desc: "Футомакі з лососем, Каліфорнія з окунем, Темпура з тунцем, Філадельфія з вугрем, Maki з водоростями" },
+                    { name: "Токіо Сет", desc: "Кіото рол, Темпура з окунем, Футомакі з тунцем, Maki з лососем, Паприка рол, Maki з крем-сиром, Філадельфія з сиром" },
+                    { name: "Хоккайдо Сет", desc: "Філадельфія лайт з тунцем, Філадельфія лайт з лососем, Футомакі з окунем, Темпура з сурімі" },
+                    { name: "Філадельфія Сет", desc: "Філадельфія лайт з лососем, Філадельфія хіяши, Філадельфія лайт з вугрем, Філадельфія з тунцем, Футомакі з лососем, Філадельфія з сиром" },
+                    { name: "Сан Сет", desc: "Темпура з сурімі, Темпура з сиром, Філадельфія з вугрем, Паприка рол, Футомакі з креветками темпура, Філадельфія з лососем, Каліфорнія класична, Maki з тунцем, Каліфорнія з куркою, Maki з огірком" }
+                ]
+            },
+            phila: {
+                title: "Роли Філадельфія",
+                items: [
+                    { name: "Філадельфія з куркою", desc: "норі, рис, філе куряче копчене, огірок, сир вершковий, крем-сир" },
+                    { name: "Філадельфія лайт з лососем", desc: "норі, рис, лосось, крем-сир" },
+                    { name: "Філадельфія делюкс з лососем", desc: "норі, рис, лосось, ікра масаго, авокадо, огірок, крем-сир" },
+                    { name: "Філадельфія лайт з тунцем", desc: "норі, рис, тунець, крем-сир" },
+                    { name: "Філадельфія делюкс з тунцем", desc: "норі, рис, тунець, ікра масаго, авокадо, огірок, крем-сир" },
+                    { name: "Філадельфія з сиром", desc: "норі, рис, філе куряче копчене, огірок, сир тостовий, крем-сир" },
+                    { name: "Філадельфія з лососем", desc: "норі, рис, лосось, огірок, крем-сир" },
+                    { name: "Філадельфія класична", desc: "норі, рис, лосось, крем-сир" },
+                    { name: "Філадельфія з тунцем", desc: "норі, рис, тунець, огірок, крем-сир" },
+                    { name: "Філадельфія лайт з вугрем", desc: "норі, рис, вугор смажений, крем-сир, кунжут, соус унагі" },
+                    { name: "Філадельфія з вугрем", desc: "норі, рис, вугор смажений, огірок, крем-сир, кунжут, соус унагі" },
+                    { name: "Філадельфія з креветками", desc: "норі, рис, креветки тигрові, огірок, крем-сир" },
+                    { name: "Філадельфія делюкс з вугрем", desc: "норі, рис, вугор смажений, ікра масаго, авокадо, огірок, крем-сир, кунжут, соус унагі" },
+                    { name: "Філадельфія делюкс з креветками", desc: "норі, рис, креветки тигрові, ікра масаго, авокадо, огірок, крем-сир" }
+                ]
+            },
+            calif: {
+                title: "Роли Каліфорнія",
+                items: [
+                    { name: "Каліфорнія з куркою", desc: "норі, рис, філе куряче копчене, авокадо, огірок, сир вершковий, крем-сир, кунжут" },
+                    { name: "Каліфорнія класична", desc: "норі, рис, сурімі, авокадо, огірок, крем-сир, ікра масаго" },
+                    { name: "Каліфорнія з окунем", desc: "норі, рис, окунь морський смажений, авокадо, огірок, крем-сир, кунжут, соус унагі" },
+                    { name: "Каліфорнія з лососем в масаго", desc: "норі, рис, лосось, авокадо, огірок, крем-сир, ікра масаго" },
+                    { name: "Каліфорнія з тунцем", desc: "норі, рис, тунець, авокадо, огірок, крем-сир, кунжут" },
+                    { name: "Каліфорнія з смаженим тунцем", desc: "норі, рис, тунець смажений, авокадо, огірок, крем-сир, кунжут" },
+                    { name: "Каліфорнія з креветками темпура", desc: "норі, рис, креветки темпура, авокадо, огірок, крем-сир, кунжут" },
+                    { name: "Каліфорнія з лососем", desc: "норі, рис, лосось, авокадо, огірок, крем-сир, кунжут" },
+                    { name: "Каліфорнія з смаженим лососем", desc: "норі, рис, лосось смажений, авокадо, огірок, крем-сир, кунжут" },
+                    { name: "Каліфорнія з тунцем в масаго", desc: "норі, рис, тунець, авокадо, огірок, крем-сир, ікра масаго" },
+                    { name: "Каліфорнія з вугрем", desc: "норі, рис, вугор смажений, авокадо, огірок, крем-сир, кунжут, соус унагі" }
+                ]
+            },
+            hotMaki: {
+                title: "Гарячі та Футомакі",
+                items: [
+                    { name: "Темпура з сиром", desc: "норі, рис, сир чеддер, сир моцарела, сир вершковий, кляр, кунжут, соус унагі" },
+                    { name: "Темпура з сурімі", desc: "норі, рис, сурімі, ікра масаго, огірок, крем-сир, кляр, кунжут, соус унагі" },
+                    { name: "Темпура з лососем", desc: "норі, рис, лосось, ікра масаго, огірок, крем-сир, кляр, кунжут, соус унагі" },
+                    { name: "Темпура з вугрем", desc: "норі, рис, вугор смажений, ікра масаго, огірок, крем-сир, кляр, кунжут, соус унагі" },
+                    { name: "Темпура з куркою", desc: "норі, рис, філе куряче копчене, огірок, сир вершковий, крем-сир, кляр, кунжут, соус унагі" },
+                    { name: "Темпура з окунем", desc: "норі, рис, окунь морський смажений, ікра масаго, огірок, крем-сир, кляр, кунжут, соус унагі" },
+                    { name: "Темпура з тунцем", desc: "норі, рис, тунець, ікра масаго, огірок, крем-сир, кляр, кунжут, соус унагі" },
+                    { name: "Темпура з креветками", desc: "норі, рис, креветки, огірок, крем-сир, кляр, кунжут, соус унагі" },
+                    { name: "Футомакі ясай рол", desc: "норі, рис, авокадо, огірок, помідор, перець болгарський, груша, лист салату, кунжут, соус горіховий" },
+                    { name: "Футомакі з лососем", desc: "норі, рис, лосось, ікра масаго, огірок, лист салату, крем-сир" },
+                    { name: "Футомакі з вугрем", desc: "норі, рис, вугор смажений, ікра масаго, огірок, лист салату, крем-сир, кунжут, соус унагі" },
+                    { name: "Футомакі з окунем", desc: "норі, рис, окунь морський смажений, ікра масаго, огірок, лист салату, крем-сир, кунжут, соус унагі" },
+                    { name: "Футомакі з тунцем", desc: "норі, рис, тунець, ікра масаго, огірок, лист салату, крем-сир" },
+                    { name: "Футомакі з креветками темпура", desc: "норі, рис, креветки темпура, ікра масаго, огірок, лист салату, крем-сир" }
+                ]
+            },
+            salads: {
+                title: "Салати",
+                items: [
+                    { name: "Хіяши", desc: "морські водорості, соус горіховий, кунжут" },
+                    { name: "Діадора", desc: "сир моцарела, огірок, шинка, яйце куряче, соус майонез, зелень, італійські трави" },
+                    { name: "Овочевий", desc: "помідор, огірок, перець болгарський, цибуля, соус, зелень, італійські трави" },
+                    { name: "Грецький", desc: "оливки чорні, сир фета, помідор, огірок, перець болгарський, цибуля, лист салату, італійські трави" },
+                    { name: "Марконі", desc: "філе куряче копчене, гриби печериці смажені, груша, яйце куряче, майонез, горіх волоський, зелень, італійські трави" },
+                    { name: "Сієна", desc: "філе куряче копчене, шинка, сухарі, мікс салату, помідор, цибуля, соус, зелень, італійські трави" },
+                    { name: "Цезар", desc: "філе куряче копчене, бекон смажений, помідор, яйце перепелине, сухарі, соус цезар, мікс салату, сир пармезан, італійські трави" },
+                    { name: "Салат з грушею", desc: "груша, бекон смажений, сир дорблю, горіх волоський, мікс салату, соус, кунжут" }
+                ]
+            },
+            soupsGarnish: {
+                title: "Супи та Закуски",
+                items: [
+                    { name: "Суп з фрикадельками", desc: "бульйон курячий, фрикадельки з курятини, яйце перепелине, локшина, зелень" },
+                    { name: "Солянка", desc: "свинина, курятина, бекон, баварські ковбаски, салямі, помідор, огірок, сметана, оливки чорні, лимон" },
+                    { name: "Місо-суп", desc: "бульйон рибний, водорості, рисова локшина, гриби печериці, сир плавлений, соєвий соус, кунжут, зелень" },
+                    { name: "Місо-суп з лососем", desc: "лосось, бульйон рибний, водорості, рисова локшина, гриби печериці, сир плавлений, соєвий соус, кунжут, зелень" },
+                    { name: "Місо-суп з вугрем", desc: "вугор, бульйон рибний, водорості, рисова локшина, гриби печериці, сир плавлений, соєвий соус, кунжут, зелень" },
+                    { name: "Сирні палички", desc: "сир моцарела, кляр, соус на вибір" },
+                    { name: "Картопля фрі", desc: "картопля фрі, сіль, соус на вибір" },
+                    { name: "Картопля по-селянськи", desc: "картопля, часник, зелень, соус на вибір" },
+                    { name: "Креветки темпура", desc: "креветки, кляр, соус на вибір" },
+                    { name: "Стріпси курячі", desc: "філе куряче, кляр, соус на вибір" },
+                    { name: "Крила", desc: "крила курячі, кунжут, соус на вибір" }
+                ]
+            }
+        };
+
+        // ЛОГІКА ДОДАТКУ
+        let currentCategoryKey = null;
+        let generatedQuestions = [];
+        let questionIndex = 0;
+        let score = 0;
+
+        const screens = {
+            menu: document.getElementById('main-menu'),
+            quiz: document.getElementById('quiz-screen'),
+            result: document.getElementById('result-screen')
+        };
+
+        function hideAllScreens() {
+            Object.values(screens).forEach(screen => {
+                screen.classList.add('hidden');
+                screen.classList.remove('fade-in');
+            });
+        }
+
+        function showMainMenu() {
+            hideAllScreens();
+            screens.menu.classList.remove('hidden');
+            setTimeout(() => screens.menu.classList.add('fade-in'), 10);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function generateQuizData(categoryKey) {
+            const items = rawMenuData[categoryKey].items;
+            let questions = [];
+
+            items.forEach(item => {
+                let options = [item.desc]; 
+                let wrongOptions = [];
+                let attempts = 0;
+                while (wrongOptions.length < 2 && attempts < 50) {
+                    let randomItem = items[Math.floor(Math.random() * items.length)];
+                    if (randomItem.desc !== item.desc && !wrongOptions.includes(randomItem.desc)) {
+                        wrongOptions.push(randomItem.desc);
+                    }
+                    attempts++;
+                }
+
+                options = options.concat(wrongOptions);
+                options = shuffleArray(options); 
+                let correctIndex = options.indexOf(item.desc);
+
+                questions.push({
+                    question: `Що входить до складу страви «${item.name}»?`,
+                    options: options,
+                    correct: correctIndex
+                });
+            });
+            return shuffleArray(questions);
+        }
+
+        function startCategory(categoryKey) {
+            currentCategoryKey = categoryKey;
+            generatedQuestions = generateQuizData(categoryKey); 
+            questionIndex = 0;
+            score = 0;
+            
+            document.getElementById('category-title').innerText = rawMenuData[categoryKey].title;
+            hideAllScreens();
+            screens.quiz.classList.remove('hidden');
+            setTimeout(() => screens.quiz.classList.add('fade-in'), 10);
+            
+            loadQuestion();
+        }
+
+        function restartCategory() {
+            startCategory(currentCategoryKey);
+        }
+
+        function updateProgress() {
+            const progressPercent = ((questionIndex) / generatedQuestions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('progress-text').innerText = `Рівень ${questionIndex + 1} / ${generatedQuestions.length}`;
+        }
+
+        function loadQuestion() {
+            updateProgress();
+            const qData = generatedQuestions[questionIndex];
+            document.getElementById('question-text').innerText = qData.question;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            qData.options.forEach((optionText, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = optionText;
+                btn.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            const qData = generatedQuestions[questionIndex];
+            if (selectedIndex === qData.correct) {
+                score++;
+            }
+            
+            questionIndex++;
+            if (questionIndex < generatedQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            hideAllScreens();
+            screens.result.classList.remove('hidden');
+            setTimeout(() => screens.result.classList.add('fade-in'), 10);
+            
+            const percentage = Math.round((score / generatedQuestions.length) * 100);
+            let message = "";
+            if (percentage === 100) message = "ура все вірно! ";
+            else if (percentage >= 80) message = "майже все вірно.";
+            else if (percentage >= 50) message = "плюс мінус вірно";
+            else message = "взагалі не вірно плакать хочеться.";
+
+            document.getElementById('score-display').innerText = `${score} / ${generatedQuestions.length}`;
+            document.getElementById('score-message').innerText = message;
+        }
+    </script>
+</body>
+</html>
